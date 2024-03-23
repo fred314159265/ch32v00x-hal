@@ -321,7 +321,7 @@ mod peripheral_macros {
                 }
             }
 
-            impl crate::peripheral::sealed::Sealed for $name {}
+            impl $crate::peripheral::sealed::Sealed for $name {}
         };
         ($(#[$cfg:meta])? $name:ident <= $base:ident) => {
             $(#[$cfg])?
@@ -366,7 +366,7 @@ mod peripheral_macros {
                 }
             }
 
-            impl crate::peripheral::Peripheral for $name {
+            impl $crate::peripheral::Peripheral for $name {
                 type P = $name;
 
                 #[inline]
@@ -375,7 +375,7 @@ mod peripheral_macros {
                 }
             }
 
-            impl crate::peripheral::sealed::Sealed for $name {}
+            impl $crate::peripheral::sealed::Sealed for $name {}
         };
     }
 }

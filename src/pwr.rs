@@ -22,7 +22,7 @@ pub struct Pwr {
 }
 
 impl Pwr {
-    pub fn pwr(pwr: PWR, rcc: &mut Rcc, _clocks: Clocks) -> Self {
+    pub fn new(pwr: PWR, rcc: &mut Rcc, _clocks: Clocks) -> Self {
         PWR::enable(&mut rcc.apb1);
 
         Self { pwr, _clocks }

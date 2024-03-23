@@ -185,7 +185,7 @@ impl UsartExt for USART1 {
 
         AFIO::enable(&mut rcc.apb2);
 
-        let apbclk = USART1::clock(&clocks).raw();
+        let apbclk = USART1::clock(clocks).raw();
         let integer_divider = (25 * apbclk) / (4 * config.baudrate);
         let div_m = integer_divider / 100;
         let div_f = integer_divider - 100 * div_m;

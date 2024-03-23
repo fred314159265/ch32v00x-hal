@@ -283,11 +283,7 @@ where
 }
 
 impl<TIM: Instance + WithPwm> Timer<TIM> {
-    pub fn pwm_hz<REMAP, P, PINS>(
-        mut self,
-        _pins: PINS,
-        freq: Hertz,
-    ) -> PwmHz<TIM, REMAP, P, PINS>
+    pub fn pwm_hz<REMAP, P, PINS>(mut self, _pins: PINS, freq: Hertz) -> PwmHz<TIM, REMAP, P, PINS>
     where
         REMAP: Remap<Periph = TIM>,
         PINS: Pins<REMAP, P>,

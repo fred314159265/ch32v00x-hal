@@ -1,6 +1,6 @@
-use core::convert::Infallible;
-use embedded_hal_1::digital::{ErrorType, InputPin, OutputPin, StatefulOutputPin };
 use super::{Input, OpenDrain, Output, Pin};
+use core::convert::Infallible;
+use embedded_hal_1::digital::{ErrorType, InputPin, OutputPin, StatefulOutputPin};
 
 impl<const P: char, const N: u8, MODE> ErrorType for Pin<P, N, Input<MODE>> {
     type Error = Infallible;
@@ -25,12 +25,14 @@ impl<const P: char, const N: u8, MODE> ErrorType for Pin<P, N, Output<MODE>> {
 impl<const P: char, const N: u8, MODE> OutputPin for Pin<P, N, Output<MODE>> {
     #[inline]
     fn set_high(&mut self) -> Result<(), Self::Error> {
-        Ok(self.set_high())
+        self.set_high();
+        Ok(())
     }
 
     #[inline]
     fn set_low(&mut self) -> Result<(), Self::Error> {
-        Ok(self.set_low())
+        self.set_low();
+        Ok(())
     }
 }
 
@@ -58,4 +60,3 @@ impl<const P: char, const N: u8> InputPin for Pin<P, N, Output<OpenDrain>> {
         Ok((*self).is_low())
     }
 }
-

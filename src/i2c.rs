@@ -153,13 +153,13 @@ where
         // Check error codes
         let s1 = self.i2c.star1.read();
         if s1.berr().bit() {
-            return Err(Error::BusError);
+            Err(Error::BusError)
         } else if s1.af().bit() {
-            return Err(Error::AcknowledgeFailure);
+            Err(Error::AcknowledgeFailure)
         } else if s1.arlo().bit() {
-            return Err(Error::ArbitrationLost);
+            Err(Error::ArbitrationLost)
         } else if s1.ovr().bit() {
-            return Err(Error::Overrun);
+            Err(Error::Overrun)
         } else {
             Ok(())
         }

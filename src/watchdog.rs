@@ -1,6 +1,6 @@
 //! Watchdog peripherals
 
-use crate::{ pac::IWDG, time::MilliSeconds };
+use crate::{pac::IWDG, time::MilliSeconds};
 use fugit::ExtU32;
 
 /// Wraps the Independent Watchdog (IWDG) peripheral

@@ -1,7 +1,6 @@
 use super::{compute_arr_presc, Error, Event, FTimer, Instance, SysEvent, Timer};
 use crate::pac::SYSTICK;
 use crate::timer::SysTimerExt;
-use core::convert::TryFrom;
 use core::ops::{Deref, DerefMut};
 use fugit::{HertzU32 as Hertz, MicrosDurationU32, TimerDurationU32, TimerInstantU32};
 

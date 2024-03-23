@@ -1,9 +1,9 @@
 //! Delays
 
 use super::{FTimer, Instance, Timer};
-use core::ops::{Deref, DerefMut};
 use crate::pac::SYSTICK;
 use crate::timer::SysTimerExt;
+use core::ops::{Deref, DerefMut};
 use fugit::{MicrosDurationU32, TimerDurationU32};
 
 /// Timer as a delay provider (SYSTICKick by default)

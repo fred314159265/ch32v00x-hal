@@ -1,9 +1,9 @@
-use embedded_hal_02::adc::{Channel, OneShot};
 use crate::gpio::{self, Analog};
 use crate::pac;
 use crate::rcc::{self, Clocks, Enable, Reset};
-use qingke::riscv::asm::delay;
+use embedded_hal_02::adc::{Channel, OneShot};
 use fugit::{Hertz, HertzU32};
+use qingke::riscv::asm::delay;
 
 /// Continuous mode
 pub struct Continuous;
@@ -208,17 +208,17 @@ impl Adc<pac::ADC1> {
     }
 
     fn reset(&mut self) {
-		let mut apb2 = rcc::APB2::new();
+        let mut apb2 = rcc::APB2::new();
         <pac::ADC1>::reset(&mut apb2);
     }
 
     fn enable_clock(&mut self) {
-		let mut apb2 = rcc::APB2::new();
+        let mut apb2 = rcc::APB2::new();
         <pac::ADC1>::enable(&mut apb2);
     }
 
     fn disable_clock(&mut self) {
-		let mut apb2 = rcc::APB2::new();
+        let mut apb2 = rcc::APB2::new();
         <pac::ADC1>::disable(&mut apb2);
     }
 
@@ -233,13 +233,13 @@ impl Adc<pac::ADC1> {
     }
 
     fn setup_oneshot(&mut self) {
-        self.rb.ctlr2.modify(|_, w| {
-            unsafe { w.cont()
+        self.rb.ctlr2.modify(|_, w| unsafe {
+            w.cont()
                 .clear_bit()
                 .exttrig()
                 .set_bit()
                 .extsel()
-                .bits(0b111) }
+                .bits(0b111)
         });
         self.rb
             .ctlr1
@@ -248,21 +248,51 @@ impl Adc<pac::ADC1> {
     }
     fn set_channel_sample_time(&mut self, chan: u8, sample_time: SampleTime) {
         let sample_time = sample_time.into();
-		unsafe {
-			match chan {
-				0 => self.rb.samptr2_charge2.modify(|_, w| w.smp0_tkcg0().bits(sample_time) ),
-				1 => self.rb.samptr2_charge2.modify(|_, w| w.smp1_tkcg1().bits(sample_time) ),
-				2 => self.rb.samptr2_charge2.modify(|_, w| w.smp2_tkcg2().bits(sample_time) ),
-				3 => self.rb.samptr2_charge2.modify(|_, w| w.smp3_tkcg3().bits(sample_time) ),
-				4 => self.rb.samptr2_charge2.modify(|_, w| w.smp4_tkcg4().bits(sample_time) ),
-				5 => self.rb.samptr2_charge2.modify(|_, w| w.smp5_tkcg5().bits(sample_time) ),
-				6 => self.rb.samptr2_charge2.modify(|_, w| w.smp6_tkcg6().bits(sample_time) ),
-				7 => self.rb.samptr2_charge2.modify(|_, w| w.smp7_tkcg7().bits(sample_time) ),
-				8 => self.rb.samptr2_charge2.modify(|_, w| w.smp8_tkcg8().bits(sample_time) ),
-				9 => self.rb.samptr2_charge2.modify(|_, w| w.smp9_tkcg9().bits(sample_time) ),
-				_ => unreachable!(),
-			}
-		}
+        unsafe {
+            match chan {
+                0 => self
+                    .rb
+                    .samptr2_charge2
+                    .modify(|_, w| w.smp0_tkcg0().bits(sample_time)),
+                1 => self
+                    .rb
+                    .samptr2_charge2
+                    .modify(|_, w| w.smp1_tkcg1().bits(sample_time)),
+                2 => self
+                    .rb
+                    .samptr2_charge2
+                    .modify(|_, w| w.smp2_tkcg2().bits(sample_time)),
+                3 => self
+                    .rb
+                    .samptr2_charge2
+                    .modify(|_, w| w.smp3_tkcg3().bits(sample_time)),
+                4 => self
+                    .rb
+                    .samptr2_charge2
+                    .modify(|_, w| w.smp4_tkcg4().bits(sample_time)),
+                5 => self
+                    .rb
+                    .samptr2_charge2
+                    .modify(|_, w| w.smp5_tkcg5().bits(sample_time)),
+                6 => self
+                    .rb
+                    .samptr2_charge2
+                    .modify(|_, w| w.smp6_tkcg6().bits(sample_time)),
+                7 => self
+                    .rb
+                    .samptr2_charge2
+                    .modify(|_, w| w.smp7_tkcg7().bits(sample_time)),
+                8 => self
+                    .rb
+                    .samptr2_charge2
+                    .modify(|_, w| w.smp8_tkcg8().bits(sample_time)),
+                9 => self
+                    .rb
+                    .samptr2_charge2
+                    .modify(|_, w| w.smp9_tkcg9().bits(sample_time)),
+                _ => unreachable!(),
+            }
+        }
     }
     fn set_regular_sequence(&mut self, channels: &[u8]) {
         let len = channels.len();
@@ -290,7 +320,9 @@ impl Adc<pac::ADC1> {
                 .fold(0u32, |s, (i, c)| s | ((*c as u32) << (i * 5)));
             self.rb.rsqr1.write(|w| unsafe { w.bits(bits) });
         }
-        self.rb.rsqr1.modify(|_, w| unsafe { w.l().bits((len - 1) as u8) });
+        self.rb
+            .rsqr1
+            .modify(|_, w| unsafe { w.l().bits((len - 1) as u8) });
     }
 
     fn set_continuous_mode(&mut self, continuous: bool) {
@@ -345,11 +377,13 @@ impl Adc<pac::ADC1> {
 
 impl Adc<pac::ADC1> {
     fn read_aux(&mut self, chan: u8) -> u16 {
-		/* ADC TSPD mask */
-		const CTLR2_TSVREFE_SET: u32   = 0x00800000;
-		const CTLR2_TSVREFE_RESET: u32 = 0xFF7FFFFF;
+        /* ADC TSPD mask */
+        const CTLR2_TSVREFE_SET: u32 = 0x00800000;
+        const CTLR2_TSVREFE_RESET: u32 = 0xFF7FFFFF;
         let tsv_off = if (self.rb.ctlr2.read().bits() & CTLR2_TSVREFE_SET) > 0 {
-            self.rb.ctlr2.modify(|r, w| unsafe { w.bits(r.bits() | CTLR2_TSVREFE_SET) } );
+            self.rb
+                .ctlr2
+                .modify(|r, w| unsafe { w.bits(r.bits() | CTLR2_TSVREFE_SET) });
 
             // The reference manual says that a stabilization time is needed after the powering the
             // sensor, this time can be found in the datasheets.
@@ -364,7 +398,9 @@ impl Adc<pac::ADC1> {
         let val = self.convert(chan);
 
         if tsv_off {
-            self.rb.ctlr2.modify(|r, w| unsafe { w.bits(r.bits() & CTLR2_TSVREFE_RESET) });
+            self.rb
+                .ctlr2
+                .modify(|r, w| unsafe { w.bits(r.bits() & CTLR2_TSVREFE_RESET) });
         }
 
         val
@@ -397,22 +433,22 @@ pub trait ChannelTimeSequence {
 }
 
 impl ChannelTimeSequence for Adc<pac::ADC1> {
-	#[inline(always)]
-	fn set_channel_sample_time(&mut self, chan: u8, sample_time: SampleTime) {
-		self.set_channel_sample_time(chan, sample_time);
-	}
-	#[inline(always)]
-	fn set_regular_sequence (&mut self, channels: &[u8]) {
-		self.set_regular_sequence(channels);
-	}
-	#[inline(always)]
-	fn set_continuous_mode(&mut self, continuous: bool) {
-		self.set_continuous_mode(continuous);
-	}
-	#[inline(always)]
-	fn set_discontinuous_mode(&mut self, channels: Option<u8>) {
-		self.set_discontinuous_mode(channels);
-	}
+    #[inline(always)]
+    fn set_channel_sample_time(&mut self, chan: u8, sample_time: SampleTime) {
+        self.set_channel_sample_time(chan, sample_time);
+    }
+    #[inline(always)]
+    fn set_regular_sequence(&mut self, channels: &[u8]) {
+        self.set_regular_sequence(channels);
+    }
+    #[inline(always)]
+    fn set_continuous_mode(&mut self, continuous: bool) {
+        self.set_continuous_mode(continuous);
+    }
+    #[inline(always)]
+    fn set_discontinuous_mode(&mut self, channels: Option<u8>) {
+        self.set_discontinuous_mode(channels);
+    }
 }
 
 impl<WORD, PIN> OneShot<pac::ADC1, WORD, PIN> for Adc<pac::ADC1>

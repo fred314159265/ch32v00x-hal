@@ -7,7 +7,6 @@ use panic_halt as _;
 
 use ch32v00x_hal as hal;
 use ch32v00x_hal::prelude::*;
-use qingke::riscv;
 
 #[qingke_rt::entry]
 fn main() -> ! {
@@ -29,7 +28,10 @@ fn main() -> ! {
 
     loop {
         led.toggle();
-        println!("vcc {}mV", 1200u32 * adc.max_sample() as u32/adc.read_vref() as u32);
+        println!(
+            "vcc {}mV",
+            1200u32 * adc.max_sample() as u32 / adc.read_vref() as u32
+        );
 
         delay.delay_ms(1000);
     }

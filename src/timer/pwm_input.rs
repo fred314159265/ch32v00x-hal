@@ -4,7 +4,6 @@
 use core::marker::PhantomData;
 use core::mem;
 
-use crate::pac::DBG;
 use crate::pac::{TIM1, TIM2};
 
 use crate::gpio::{self, Input};
@@ -96,7 +95,7 @@ impl Timer<TIM1> {
 
 impl Timer<TIM2> {
     pub fn pwm_input<REMAP, PINS>(
-        mut self,
+        self,
         pins: PINS,
         mode: Configuration,
     ) -> PwmInput<TIM2, REMAP, PINS>
@@ -110,7 +109,6 @@ impl Timer<TIM2> {
         tim2(tim, pins, clk, mode)
     }
 }
-
 
 /// Courtesy of @TeXitoi (https://github.com/stm32-rs/stm32f1xx-hal/pull/10#discussion_r259535503)
 fn compute_arr_presc(freq: u32, clock: u32) -> (u16, u16) {

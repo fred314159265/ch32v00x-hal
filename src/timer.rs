@@ -26,22 +26,19 @@
 */
 #![allow(non_upper_case_globals)]
 
-use core::convert::TryFrom;
+use crate::pac::SYSTICK;
 use crate::rcc::{self, Clocks, APB1, APB2};
 use crate::time::Hertz;
-use crate::pac::SYSTICK;
 
 use ch32v0::ch32v003::{TIM1, TIM2};
-pub mod pwm_input;
-pub use pwm_input::*;
 pub(crate) mod pins;
+pub mod pwm_input;
 pub use pins::*;
 pub mod delay;
 pub use delay::*;
 pub mod counter;
 pub use counter::*;
 pub mod pwm;
-pub use pwm::*;
 
 //mod hal_02;
 
@@ -216,12 +213,12 @@ impl SysTimerExt for SYSTICK {
         unsafe { (*Self::PTR).cmpr.read().bits() }
     }
 
-/*
-        pub ctlr: CTLR,
-        pub sr: SR,
-        pub cnt: CNT,
-        pub cmpr: CMPR,
-*/
+    /*
+            pub ctlr: CTLR,
+            pub sr: SR,
+            pub cnt: CNT,
+            pub cmpr: CMPR,
+    */
     #[inline]
     fn has_wrapped(&mut self) -> bool {
         self.sr.read().cntif().bit_is_set()
@@ -258,13 +255,11 @@ impl Timer<SYSTICK> {
     /// Initialize SysTick timer
     pub fn syst(mut tim: SYSTICK, clocks: &Clocks) -> Self {
         tim.set_clock_source(SystickClkSource::HClk);
-        
-        let t = Self {
+
+        Self {
             tim,
             clk: clocks.hclk(),
-        };
-
-        t
+        }
     }
 
     pub fn configure(&mut self, clocks: &Clocks) {
@@ -801,4 +796,3 @@ hal!(
     TIM1: [Timer1, u16, APB2, c: (CH4, _aoe), m: tim1,],
     TIM2: [Timer2, u16, APB1, c: (CH4), m: tim2,],
 );
-
