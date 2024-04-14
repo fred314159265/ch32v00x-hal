@@ -71,8 +71,9 @@ name = "serial"
 required-features = ["ch32v003", "rt"]
 
 [[example]]
-<<<<<<<<< Temporary merge branch 1
-name = "adc"
-=========
 name = "op_amp"
+required-features = ["ch32v003", "rt"]
+
+[[example]]
+name = "adc"
 required-features = ["ch32v003", "rt"]
